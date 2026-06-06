@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "queueave",
+  "description": "Operate QueueAve sessions from Claude via the QueueAve MCP server: read sessions and players; create, start, end, and queue matches; manage courts, player levels, and session status. Requires a personal MCP token from your QueueAve dashboard.",
+  "version": "1.0.0",
+  "author": {
+    "name": "QueueAve"
+  },
+  "homepage": "https://badminton.queueave.com",
+  "repository": "https://github.com/RobinPandak/queueave-marketplace",
+  "keywords": ["badminton", "queueave", "mcp", "queue", "sports"]
+}

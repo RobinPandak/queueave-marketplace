@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "queueave": {
+      "type": "http",
+      "url": "https://badminton.queueave.com/api/mcp",
+      "headers": {
+        "Authorization": "Bearer ${QUEUEAVE_MCP_TOKEN}"
+      }
+    }
+  }
+}

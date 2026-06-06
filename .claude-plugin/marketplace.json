@@ -1,0 +1,22 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "queueave",
+  "description": "Plugins for QueueAve, the badminton queue management app. Operate live sessions, matches, players, and courts from Claude.",
+  "owner": {
+    "name": "QueueAve"
+  },
+  "plugins": [
+    {
+      "name": "queueave",
+      "source": "./plugins/queueave",
+      "description": "Operate QueueAve sessions from Claude: read sessions and players; create, start, end, and queue matches; manage courts, player levels, and session status via the QueueAve MCP server. Requires a personal token from your QueueAve dashboard.",
+      "version": "1.0.0",
+      "author": {
+        "name": "QueueAve"
+      },
+      "homepage": "https://badminton.queueave.com",
+      "category": "productivity",
+      "keywords": ["badminton", "queueave", "mcp", "queue", "sports"]
+    }
+  ]
+}
