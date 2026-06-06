@@ -2,7 +2,7 @@
 
 Operate [QueueAve](https://badminton.queueave.com) badminton sessions from Claude. The plugin bundles:
 
-- The **`queueave` MCP server** (`.mcp.json`), an HTTP MCP server hosted at `https://badminton.queueave.com/api/mcp` with 22 tools for sessions, matches, players, and courts.
+- The **`queueave` MCP server** (`.mcp.json`), an HTTP MCP server hosted at `https://badminton.queueave.com/api/mcp` with 22 tools for sessions, matches, players, and courts. It uses OAuth (Google sign-in) — no personal token required.
 - The **`/queueave:operate` skill**, an operating manual that teaches Claude the tools, the find-session then act workflow, and the important side effects.
 
 ## Install
@@ -14,20 +14,21 @@ Operate [QueueAve](https://badminton.queueave.com) badminton sessions from Claud
 
 ## Authenticate
 
-The MCP server uses a personal token tied to your QueueAve organizer account.
+The MCP server uses OAuth. There is no token to copy or manage.
 
-1. Sign in at https://badminton.queueave.com (Google).
-2. Open **Dashboard, Connect Claude** (`/dashboard/mcp`), click **Generate**, copy the token (`qa_mcp_...`).
-3. Set it as an environment variable and restart Claude Code (or run `/reload-plugins`):
+**Claude Desktop / claude.ai (web):** Open Settings, then Connectors, then Add custom connector. Name it "QueueAve" and paste the URL:
+```
+https://badminton.queueave.com/api/mcp
+```
+Click Connect. A browser window opens to sign in with Google and approve access.
 
-   ```bash
-   export QUEUEAVE_MCP_TOKEN=qa_mcp_xxx        # macOS / Linux
-   ```
-   ```powershell
-   setx QUEUEAVE_MCP_TOKEN "qa_mcp_xxx"        # Windows, then open a new terminal
-   ```
+**Claude Code (CLI):**
+```
+claude mcp add --transport http queueave https://badminton.queueave.com/api/mcp
+```
+Claude Code opens the same browser sign-in on first use.
 
-Claude Code expands `${QUEUEAVE_MCP_TOKEN}` into the server's `Authorization: Bearer` header. A 401 means the token is missing, wrong, or revoked.
+A 401 means your authorization expired or was revoked. Reconnect the connector (or re-run the sign-in) to get a fresh session.
 
 ## Use
 
@@ -53,6 +54,6 @@ Every action is scoped to your own sessions.
 
 ## Security
 
-- The token is stored only as a sha-256 hash server side and is individually revocable.
+- Authorization uses OAuth 2.1 (Supabase) with your Google account; access is consent-based and revocable from your Supabase account, and tokens are short-lived.
 - The server uses the Supabase service role internally but enforces that every action belongs to the token's organizer.
-- Revoke a token from the same dashboard page; revoked tokens are rejected immediately.
+- Access is consent-based; you can revoke it at any time from your Supabase account.

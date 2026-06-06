@@ -1,6 +1,6 @@
 ---
 name: operate
-description: Operate a QueueAve badminton session from Claude. Use when the user wants to view or manage QueueAve sessions, players, matches, the on-deck queue, courts, check-ins, player levels, or session status. Examples, "list my QueueAve sessions", "create a doubles match on court 2", "end the match 21-15", "check in Alice", "queue the next match", "close court 3", "set Grant to advanced". Requires the queueave MCP server (bundled with this plugin) and a personal token.
+description: Operate a QueueAve badminton session from Claude. Use when the user wants to view or manage QueueAve sessions, players, matches, the on-deck queue, courts, check-ins, player levels, or session status. Examples, "list my QueueAve sessions", "create a doubles match on court 2", "end the match 21-15", "check in Alice", "queue the next match", "close court 3", "set Grant to advanced". Requires the queueave MCP server (bundled with this plugin).
 ---
 
 # Operating QueueAve via MCP
@@ -9,15 +9,12 @@ This plugin connects Claude to QueueAve (a badminton queue management app) throu
 
 ## Setup (one time)
 
-The MCP server authenticates with a personal token tied to your QueueAve organizer account.
+The MCP server uses OAuth. There is no token to copy.
 
-1. Sign in at https://badminton.queueave.com with Google.
-2. Open Dashboard, then Connect Claude (`/dashboard/mcp`). Click Generate and copy the token (shown once). It looks like `qa_mcp_...`.
-3. Set it in your environment as `QUEUEAVE_MCP_TOKEN`, then restart Claude Code (or run `/reload-plugins`):
-   - macOS/Linux: `export QUEUEAVE_MCP_TOKEN=qa_mcp_xxx` (add to your shell profile to persist)
-   - Windows PowerShell: `setx QUEUEAVE_MCP_TOKEN "qa_mcp_xxx"` then open a new terminal, or `$env:QUEUEAVE_MCP_TOKEN="qa_mcp_xxx"` for the current shell only
+- Claude Desktop / claude.ai (web): add a custom connector with the URL `https://badminton.queueave.com/api/mcp`. The first time you use it, a browser window opens to sign in with your QueueAve Google account and approve a consent screen. After that it just works.
+- Claude Code (CLI): `claude mcp add --transport http queueave https://badminton.queueave.com/api/mcp`. The same browser sign-in opens on first use.
 
-If a tool returns 401 / Unauthorized, the token is missing, mistyped, or revoked. Generate a new one and update the env var. You can revoke tokens anytime from the same dashboard page.
+If a tool returns 401 / Unauthorized, your authorization expired or was revoked. Reconnect the connector (or re-run the sign-in) to get a fresh session.
 
 ## Core workflow
 

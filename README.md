@@ -14,7 +14,7 @@ A [Claude Code plugin marketplace](https://code.claude.com/docs/en/plugin-market
 | --- | --- | --- |
 | **queueave** | `/plugin install queueave@queueave` | Connects Claude to the QueueAve MCP server and ships an operating-manual skill, so you can run live sessions, matches, players, and courts from Claude. |
 
-After installing `queueave`, generate a personal token at `https://badminton.queueave.com/dashboard/mcp`, set it as `QUEUEAVE_MCP_TOKEN`, and restart Claude Code. See [`plugins/queueave/README.md`](./plugins/queueave/README.md) for full setup.
+After installing `queueave`, add the connector URL `https://badminton.queueave.com/api/mcp` (Claude Desktop / web) or run `claude mcp add --transport http queueave https://badminton.queueave.com/api/mcp` (CLI), then sign in with Google on first use. See [`plugins/queueave/README.md`](./plugins/queueave/README.md) for full setup.
 
 ## Repository layout
 
@@ -26,7 +26,7 @@ After installing `queueave`, generate a personal token at `https://badminton.que
     └── queueave/
         ├── .claude-plugin/
         │   └── plugin.json     # plugin manifest
-        ├── .mcp.json           # QueueAve MCP server (HTTP, token-gated)
+        ├── .mcp.json           # QueueAve MCP server (HTTP, OAuth)
         ├── skills/
         │   └── operate/
         │       └── SKILL.md    # operating manual skill (/queueave:operate)
