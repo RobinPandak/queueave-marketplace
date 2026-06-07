@@ -10,7 +10,7 @@
       "name": "queueave",
       "source": "./plugins/queueave",
       "description": "Operate QueueAve sessions from Claude: matchmaking, assessment, and full session operations including walk-ins, payments, courts, and match history via the QueueAve MCP server. Uses OAuth (Google sign-in), no token required.",
-      "version": "3.0.0",
+      "version": "3.0.1",
       "author": {
         "name": "QueueAve"
       },

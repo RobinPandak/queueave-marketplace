@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "queueave",
   "description": "Operate QueueAve sessions from Claude via the QueueAve MCP server: read sessions and players; matchmaking, assessment, and full session operations including walk-ins, payments, courts, and match history. Uses OAuth (Google sign-in), no token required.",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "author": {
     "name": "QueueAve"
   },
