@@ -12,7 +12,7 @@ A [Claude Code plugin marketplace](https://code.claude.com/docs/en/plugin-market
 
 | Plugin | Install | What it does |
 | --- | --- | --- |
-| **queueave** | `/plugin install queueave@queueave` | Connects Claude to the QueueAve MCP server and ships an operating-manual skill, so you can run live sessions, matches, players, and courts from Claude. |
+| **queueave** | `/plugin install queueave@queueave` | Connects Claude to the QueueAve MCP server and ships operate/match/queue/assess skills, so you can run live sessions with matchmaking, assessment, walk-ins, payments, and full court management from Claude. |
 
 After installing `queueave`, add the connector URL `https://badminton.queueave.com/api/mcp` (Claude Desktop / web) or run `claude mcp add --transport http queueave https://badminton.queueave.com/api/mcp` (CLI), then sign in with Google on first use. See [`plugins/queueave/README.md`](./plugins/queueave/README.md) for full setup.
 
@@ -27,9 +27,18 @@ After installing `queueave`, add the connector URL `https://badminton.queueave.c
         ├── .claude-plugin/
         │   └── plugin.json     # plugin manifest
         ├── .mcp.json           # QueueAve MCP server (HTTP, OAuth)
+        ├── reference/
+        │   ├── leveling.md     # level ladder and ELO reference
+        │   └── matchmaking.md  # matchmaking process reference
         ├── skills/
-        │   └── operate/
-        │       └── SKILL.md    # operating manual skill (/queueave:operate)
+        │   ├── operate/
+        │   │   └── SKILL.md    # operating manual (/queueave:operate)
+        │   ├── match/
+        │   │   └── SKILL.md    # court match creation (/queueave:match)
+        │   ├── queue/
+        │   │   └── SKILL.md    # on-deck queuing (/queueave:queue)
+        │   └── assess/
+        │       └── SKILL.md    # player assessment (/queueave:assess)
         └── README.md
 ```
 

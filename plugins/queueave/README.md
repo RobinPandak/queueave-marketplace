@@ -2,8 +2,11 @@
 
 Operate [QueueAve](https://badminton.queueave.com) badminton sessions from Claude. The plugin bundles:
 
-- The **`queueave` MCP server** (`.mcp.json`), an HTTP MCP server hosted at `https://badminton.queueave.com/api/mcp` with 22 tools for sessions, matches, players, and courts. It uses OAuth (Google sign-in) — no personal token required.
+- The **`queueave` MCP server** (`.mcp.json`), an HTTP MCP server hosted at `https://badminton.queueave.com/api/mcp` with tools for sessions, matches, players, courts, walk-ins, payments, match history, and linked pairs. It uses OAuth (Google sign-in), no personal token required.
 - The **`/queueave:operate` skill**, an operating manual that teaches Claude the tools, the find-session then act workflow, and the important side effects.
+- The **`/queueave:match` skill**, which builds and places a level-and-ELO balanced court match from the priority queue.
+- The **`/queueave:queue` skill**, which adds one or more balanced matches to the on-deck queue.
+- The **`/queueave:assess` skill**, which reviews a player's match history and recommends a level change.
 
 ## Install
 
@@ -34,23 +37,41 @@ A 401 means your authorization expired or was revoked. Reconnect the connector (
 
 Ask Claude things like:
 
+- "/operate Evening Rally" (load session context and summary)
+- "/match" (balanced match on the next open court)
+- "/match Rose against Josh" (specific players)
+- "/queue the next 3" (add 3 on-deck matches)
+- "/assess Josh" (review match history and recommend a level)
+- "Register walk-in Maria Cruz as intermediate_d"
+- "Mark Josh paid"
+- "Link Ana and Ben" (locked pair, always same team)
 - "List my QueueAve sessions"
 - "Show the players in Tara Court Season 3"
 - "Create a doubles match on court 2 with Alice and Bob versus Carol and Dan, and start it"
 - "End match X 21 to 15, team 1 won"
-- "Queue the next match" / "Drain the queue onto open courts"
-- "Close court 3" / "Set Grant to advanced"
+- "Drain the queue onto open courts"
+- "Close court 3"
 
 Every action is scoped to your own sessions.
+
+## Skills
+
+| Command | What it does |
+| --- | --- |
+| `/queueave:operate` | Operating manual: connect, find sessions, act. Run `/operate <name>` to load a session by name. |
+| `/queueave:match` | Build a balanced court match from the priority queue. |
+| `/queueave:queue` | Add one or more balanced matches to the on-deck queue. |
+| `/queueave:assess` | Review a player's match history and recommend a level change. |
 
 ## Tools
 
 | Group | Tools |
 | --- | --- |
-| Read | `list_sessions`, `get_session`, `list_session_players`, `list_matches`, `find_player` |
+| Read | `list_sessions`, `get_session`, `list_session_players`, `list_matches`, `get_session_match_history`, `get_player_match_history`, `find_player` |
+| Sessions | `create_session`, `update_session_config`, `set_session_status`, `set_on_deck_buffer` |
+| Players | `register_walkin`, `set_player_level`, `set_player_check_in`, `add_player_to_session`, `set_player_status`, `set_player_payment`, `link_players`, `unlink_players` |
 | Matches | `create_match`, `start_match`, `end_match`, `cancel_match`, `add_to_on_deck`, `promote_to_court`, `drain_queue`, `remove_from_on_deck` |
-| Players | `set_player_level`, `set_player_check_in`, `add_player_to_session`, `set_player_status` |
-| Courts / session | `set_court_status`, `rename_court`, `set_num_courts`, `set_session_status`, `set_on_deck_buffer` |
+| Courts | `add_court`, `remove_court`, `set_num_courts`, `set_court_status`, `rename_court` |
 
 ## Security
 

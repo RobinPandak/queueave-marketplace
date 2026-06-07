@@ -1,6 +1,6 @@
 ---
 name: operate
-description: Operate a QueueAve badminton session from Claude. Use when the user wants to view or manage QueueAve sessions, players, matches, the on-deck queue, courts, check-ins, player levels, or session status. Examples, "list my QueueAve sessions", "create a doubles match on court 2", "end the match 21-15", "check in Alice", "queue the next match", "close court 3", "set Grant to advanced". Requires the queueave MCP server (bundled with this plugin).
+description: Operate a QueueAve badminton session from Claude. Use when the user wants to view or manage QueueAve sessions, players, matches, matchmaking, assessment, the on-deck queue, courts, check-ins, player levels, or session status. Examples, "list my QueueAve sessions", "create a doubles match on court 2", "end the match 21-15", "check in Alice", "queue the next match", "close court 3", "set Grant to advanced". Run /operate <session name> to start operating a named in-progress session. Requires the queueave MCP server (bundled with this plugin).
 ---
 
 # Operating QueueAve via MCP
@@ -16,6 +16,14 @@ The MCP server uses OAuth. There is no token to copy.
 
 If a tool returns 401 / Unauthorized, your authorization expired or was revoked. Reconnect the connector (or re-run the sign-in) to get a fresh session.
 
+## Starting an operating session (/operate <name>)
+
+When invoked as `/operate <session name>`:
+1. Call `list_sessions` (prefer status in_progress) and find the session whose name matches `<name>` (case-insensitive, allow partial). If multiple match, list them and ask which. If none, say so.
+2. Load context: `get_session(sessionId)` and `list_session_players(sessionId, sortBy: 'priority')`.
+3. Summarize: players checked in, courts open/closed, matches in progress, who is waiting longest / has fewest games.
+4. Stay in this session for follow-up commands (/match, /queue, /assess, check-ins, payments, courts) until told otherwise.
+
 ## Core workflow
 
 Tools take UUIDs, not names, so almost every task starts by resolving ids:
@@ -29,10 +37,13 @@ Use `list_matches(sessionId, status?)` to see matches with teams resolved to nam
 
 ## Tool catalog
 
-- Reads: `list_sessions`, `get_session`, `list_session_players`, `list_matches`, `find_player`
-- Matches: `create_match`, `start_match`, `end_match`, `cancel_match`, `add_to_on_deck`, `promote_to_court`, `drain_queue`, `remove_from_on_deck`
-- Players: `set_player_level`, `set_player_check_in`, `add_player_to_session`, `set_player_status`
-- Courts and session: `set_court_status`, `rename_court`, `set_num_courts`, `set_session_status`, `set_on_deck_buffer`
+- Reads: `list_sessions`, `get_session`, `list_session_players` (now includes level_rank, elo_singles/doubles, games_played, waiting_minutes, currently_playing, priority_rank, locked_partner_id; supports sortBy), `list_matches`, `get_session_match_history`, `get_player_match_history`, `find_player`
+- Sessions: `create_session`, `update_session_config`, `set_session_status`, `set_on_deck_buffer`
+- Players: `register_walkin`, `add_player_to_session`, `set_player_check_in`, `set_player_status`, `set_player_payment`, `set_player_level`, `link_players`, `unlink_players`
+- Matches: `create_match`, `add_to_on_deck`, `start_match`, `end_match`, `cancel_match`, `promote_to_court`, `drain_queue`, `remove_from_on_deck`
+- Courts: `add_court`, `remove_court`, `set_num_courts`, `set_court_status`, `rename_court`
+
+For building matches use the match / queue skills; for level changes use the assess skill.
 
 ## Rules and side effects
 
@@ -44,6 +55,10 @@ Use `list_matches(sessionId, status?)` to see matches with teams resolved to nam
 - `set_session_status` to "completed" ends the session and starts the wrapped recap generation. It does not send the go-live email blast (use the app UI for that).
 - `set_player_check_in` checking a player out reconciles any queued matches that included them.
 - Everything is scoped to your organizer account. You cannot read or change another organizer's data (admins excepted).
+- `register_walkin` creates a new player from a name and checks them in (walk-ins). For an existing player use `add_player_to_session`.
+- `link_players` forces two players onto the same team for the session (locked pair); `unlink_players` removes it.
+- `remove_court` only removes the highest court and fails if it has an active match.
+- Matchmaking lives in the match/queue skills; assessment in the assess skill. Prefer them over composing teams by hand.
 
 ## Working style
 
